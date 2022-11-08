@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([
             ClassRoomSeeder::class,
+            UserSeeder::class
         ]);
         // DB::table('class_room)->insert([
         //     'name' => Str::random(10),

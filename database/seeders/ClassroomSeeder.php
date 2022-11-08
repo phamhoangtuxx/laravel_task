@@ -19,7 +19,7 @@ class ClassroomSeeder extends Seeder
     {
         //
         ClassRoom::factory()
-            ->count(20)
+            ->count(10)
             ->create();
     }
 }

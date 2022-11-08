@@ -2,43 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ClassroomController extends Controller
+use Illuminate\Http\Request;
+
+class UserController extends Controller
 {
     public function index()
     {
-
-
-
-
         //Phần Trang 
-        // $ClassRoom  = DB::table('class_room')->Paginate(5);
+        // $User  = DB::table('users')->Paginate(5);
         // return response()->json([
-        //     'classroom' => $ClassRoom
+        //     'User' => $User
         // ]);
 
 
         //Giới hạn số trang hiển thị
-        // $ClassRoom  = DB::table('class_room')
+        // $User  = DB::table('users')
         //     ->offset(0)
         //     ->Limit(5)
         //     ->get();
         // return response()->json([
-        //     'classroom' => $ClassRoom
+        //     'User' => $User
         // ]);
 
-
         // Seach theo tên
-        $class_room  = DB::table('class_room')
-            ->where('name', 'like', '%r')
+        $User  = DB::table('users')
+            ->where('name', 'like', '%u')
             ->get();
 
         return response()->json([
-            'class_room' => $class_room
+            'User' => $User
         ]);
     }
 }

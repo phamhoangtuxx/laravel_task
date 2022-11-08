@@ -17,12 +17,12 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->unsignedInteger('mobile')->unique(); //unsignedInteger không lấy âm
+            $table->string('mobile'); //unsignedInteger không lấy âm
             $table->integer('state')->comment('Trạng thái tài khoản, 1 : Kích hoạt,0 Block')->default(0);
             $table->string('address')->nullable();
             $table->string('password');
             $table->integer('score')->comment('Điểm của user này, càng cao thì tỉ lệ xuất hiện càng nhiều')->default(0);
-            $table->integer('created_at');
+            $table->timestamps();
         });
     }
 
