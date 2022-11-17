@@ -24,5 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Route::get('classRoom', [ClassRoomController::class, 'index']);
 
-Route::get('classRoom', [ClassroomController::class, 'index']);
+Route::get('classroom', [ClassroomController::class, 'index']);
 Route::get('User', [UserController::class, 'index']);
+
+Route::post('classRoomID/{id}', [ClassroomController::class, 'store']);
+
+
+// Route::get('', [Controller::class, '']);

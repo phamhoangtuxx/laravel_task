@@ -18,6 +18,8 @@ class CreateClassRoomTable extends Migration
             $table->string('name', 255);
             $table->string('icon', 128)->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
+            $table->integer('state')->comment('Trạng thái tài khoản, 1 : Kích hoạt,0 Block')->default(0);
+            $table->string('createdBy', 40);
             $table->timestamps();
         });
     }

@@ -140,23 +140,38 @@ return [
     | specify a specific custom language line for a given attribute rule.
     |
     */
-
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        
+        'name' => [
+            'require' => 'Bạn chưa truyền giá trị cho name',
+            'string'  => 'Tên phải là 1 chuỗi',
         ],
+        'classroomID' => [
+            'required' => 'Bạn chưa truyền giá trị cho classroomID',
+            'min'      => 'Gía trị tối thiểu là 1',
+            'max'      => 'Giá trị tối đa là 30'
+        ],
+        'createdBy'   => [
+            'required' => 'Bạn chưa truyền giá trị cho createdBy',
+
+        ],
+        'state'   => [
+            'required' => 'Bạn chưa nhập trạng thái cho state',
+            'min'      => 'Giá trị tối thiểu là  0',
+            'max'      => 'Giá trị tối đa là 1'
+        ],
+
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Custom Validation Attributes
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used to swap our attribute placeholder
-    | with something more reader friendly such as "E-Mail Address" instead
-    | of "email". This simply helps us make our message more expressive.
-    |
-    */
+    // |--------------------------------------------------------------------------
+    // | Custom Validation Attributes
+    // |--------------------------------------------------------------------------
+    // |
+    // | The following language lines are used to swap our attribute placeholder
+    // | with something more reader friendly such as "E-Mail Address" instead
+    // | of "email". This simply helps us make our message more expressive.
+    // |
+    // */
 
     'attributes' => [],
 

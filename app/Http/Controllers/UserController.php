@@ -28,7 +28,7 @@ class UserController extends Controller
 
         // Seach theo tên
         $User  = DB::table('users')
-            ->where('name', 'like', '%u')
+            ->where('name', 'like', '%n')
             ->get();
 
         return response()->json([

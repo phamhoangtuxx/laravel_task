@@ -22,6 +22,9 @@ class ClassroomFactory extends Factory
             'name' => $this->faker->name(),
             'icon' => $this->faker->name(),
             'description' => $this->faker->text(),
+            'createdBy' => $this->faker->randomDigit(),
+            'state' => $this->faker->numberBetween(0, 1),
+
         ];
     }
 }
