@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SuccessController;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +21,9 @@ Route::get('/', function () {
 
     // return view('welcome');
 });
+
+// Route::post('login', [LoginController::class, 'store'])->name('login.store');
+Route::post('register', [RegisterController::class, 'store'])->name('register.store');
+Route::get('success', [SuccessController::class, 'index'])->name('success.index');
+
+    // Route::get('views/users/login', [LoginController::class, 'login'])->name('login');

@@ -3,6 +3,9 @@
 use App\Models\ClassRooms;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SuccessController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,12 +25,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-// Route::get('classRoom', [ClassRoomController::class, 'index']);
+// Route::get('classRoom', [ClassRoomController::class, 'index' ]);
 
 Route::get('classroom', [ClassroomController::class, 'index']);
 Route::get('User', [UserController::class, 'index']);
 
 Route::post('classRoomID/{id}', [ClassroomController::class, 'store']);
+Route::post('login', [LoginController::class, 'store'])->name('login.store');
+Route::post('register', [RegisterController::class, 'store']);
+
+
+Route::prefix('v1')->group(function () {
+
+    // Route::post('login', [LoginController::class, 'store'])->name('login.store');
+});
+
+
 
 
 // Route::get('', [Controller::class, '']);
