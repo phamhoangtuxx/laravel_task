@@ -25,17 +25,15 @@ class RegisterController extends Controller
             $errors = $validator->errors();
             return $errors;
         } else {
-            return response()->json([
-                $user = User::create([
-                    'name' => $request['name'],
-                    'email' => $request['email'],
-                    'password' => $request['password'],
-                ]),
-                // Mail::to($request->email)->send(new SendMail($user))
+
+            $user = User::create([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => $request['password'],
             ]);
             $mailLable = new SendMail($user);
-            Mail::to("phamhoangtuxx@gmail.com")->send($mailLable);
-            return true;
+            $sendMail = Mail::to("phamhoangtuxx@gmail.com")->send($mailLable);
+            return $user;
         }
         // return view('users.register');
     }
