@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChangeprofileController;
 use App\Models\ClassRooms;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ClassroomController;
@@ -33,6 +34,7 @@ Route::get('User', [UserController::class, 'index']);
 Route::post('classRoomID/{id}', [ClassroomController::class, 'store']);
 Route::post('login', [LoginController::class, 'store'])->name('login.store');
 Route::post('register', [RegisterController::class, 'store']);
+Route::put('change-profile/{id}', [ChangeprofileController::class, 'update']);
 
 
 Route::prefix('v1')->group(function () {

@@ -61,17 +61,17 @@ class LoginController extends Controller
             return $errors;
             // return response()->json(['login' => "Bạn đã nhập sai thông tin đặng nhập, vui long nhập lại"]);
         } else {
-
             foreach ($userLogin as $user) {
                 if (($request->email == $user->email) && ($request->password == $user->password)) {
+
                     return response()->json([
+
                         'login' => $userLogin,
                         'success' => 'Đăng nhập thành công'
+
                     ]);
-                } else {
-                    return response()->json([
-                        'fail' => 'Thông tin đăng nhập chưa đúng,vui lòng thử lại'
-                    ]);
+                } else if (($user->email == false) && ($user->password == false)) {
+                    return "hello";
                 }
             }
         }
