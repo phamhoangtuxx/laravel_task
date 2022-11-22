@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -38,15 +41,40 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
+        $email  = $request->get('email', ''); //Lấy danh sách ng tạo 
+        $password  = $request->get('password', ''); //Lấy danh sách ng tạo 
+        $params    = $request->all();
 
+        $validator = validator::make($params, [
+            'email' => ['required', 'string', 'email', 'max:255',],
+            'password' => ['required', 'string', 'min:8'],
+        ],);
         // $user = DB::table('users')->get('name');
-        $userLogin = User::all();
-        // dd($request->all());
-        // dd($userLogin);
-        return response()->json([
-            'login' => $userLogin
-        ]);
-        // return view('users.login');
+        $userLogin = DB::table('users')
+            ->where('email', $email)
+            ->Where('password',  $password)
+            ->get();
+
+
+        if ($validator->fails()) {
+            $errors =  $validator->errors();
+            return $errors;
+            // return response()->json(['login' => "Bạn đã nhập sai thông tin đặng nhập, vui long nhập lại"]);
+        } else {
+
+            foreach ($userLogin as $user) {
+                if (($request->email == $user->email) && ($request->password == $user->password)) {
+                    return response()->json([
+                        'login' => $userLogin,
+                        'success' => 'Đăng nhập thành công'
+                    ]);
+                } else {
+                    return response()->json([
+                        'fail' => 'Thông tin đăng nhập chưa đúng,vui lòng thử lại'
+                    ]);
+                }
+            }
+        }
     }
 
 
