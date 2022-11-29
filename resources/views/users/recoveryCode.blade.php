@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>{{$user->name}}</title>
+  <title>{{$user->VerifiedCode}}</title>
 </head>
 <body>
-  <p>{{$user->name}}</p>
-<p>CHúc mừng bạn đã tạo tà khoản thành công</p>  
+  <p>{{$user->VerifiedCode}}</p>
+<p>Vui lòng không chia sẽ mã này với bất kì ai</p>  
 </body>
 </html>
