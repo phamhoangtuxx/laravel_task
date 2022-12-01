@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -10,4 +10,5 @@
   <p>{{$user->VerifiedCode}}</p>
 <p>Vui lòng không chia sẽ mã này với bất kì ai</p>  
 </body>
-</html>
+</html> 
+

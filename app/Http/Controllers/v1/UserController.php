@@ -95,6 +95,7 @@ class UserController extends Controller
     {
         // dd($request);
         //
+
         $params = $request->all();
         // dd($params);
         $validator = validator::make($params, [
@@ -103,21 +104,24 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8'],
         ],);
 
+        // dd($validator);
 
 
-        $change = DB::table('users')
-            ->where('id', $id)
-            ->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => hash::make($request->password)
-            ]);
 
         if ($validator->fails()) {
             $errors = $validator->errors();
             return $errors;
+        } else {
+            $change = DB::table('users')
+                ->where('id', $id)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => hash::make($request->password)
+                ]);
         }
         return response()->json([
+
             "update" => $change,
             "success" => "update thành công"
         ]);
@@ -127,45 +131,60 @@ class UserController extends Controller
     public function ResetPassword(Request $request)
     {
 
-        DB::transaction(function () use ($request) {
 
-            // - Việc 1 : Gửi 1 mã số có 4 chữ số về email người dùng truyền lên, với định dạng text : "Code khôi phục mật khẩu của bạn là : 1111, vui lòng không tiết lộ code này với bất kỳ ai". 
+        $params    = $request->all();
+        //b1 validate
+        $validator = validator::make($params, [
+            'email' => ['required', 'string', 'email', 'max:255'],
+        ],);
 
 
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return $errors;
+        } else {
+            // DB::transaction(function () use ($request) {
+            $email = $request->get('email', '');
 
-            $email     = $request->get('email', '');
-            $password  = $request->get('password', '');
-            $params    = $request->all();
-            //b1 validate
-            $validator = validator::make($params, [
-                'email' => ['required', 'string', 'email', 'max:255',],
-            ],);
-            //Truy xuất database
+            $userORM = DB::table('users')
+                ->where('email', $email)
+                ->first();
+            //Nếu email tồn tại và có dữ lệu thì thực hện send mail
+            if ($userORM && !is_null($userORM)) {
+                //Send mail
+                $mailLable = new SendRecoveryCode($userORM);
+                Mail::to($email)->send($mailLable);
 
-            //Gửi mail
-            if ($validator->fails()) {
-                $errors = $validator->errors();
-                return $errors;
-            } else {
-                $user = DB::table('users');
-                $userORM = DB::table('users')
-                    ->Where('email', $email)
-                    ->get();
+                //Update VerifiedCode
+                $length = 7;
+                $pool = '0123456789349487324987384973895735632984601937497383748374385610';
+                $VerifiedCode = substr(str_shuffle(str_repeat($pool, 4)), 0, $length);
+                $update = DB::table('users')
+                    ->where('email', $email)
+                    ->update([
+                        'VerifiedCode' => $VerifiedCode,
+                    ]);
 
-                // $user = User::find(5)->get('VerifiedCode');
-                // dd($user);
-                // dd($SendCode);
-                foreach ($userORM as $value) {
-                    $user = $value->VerifiedCode;
 
-                    // xử lí gửi mail
-                    $mailLable = new SendRecoveryCode($user);
-                    $sendMail = Mail::to("phamhoangtuxx@gmail.com")->send($mailLable);
-                    return $user;
+                //Insert column table historyEmail
+                $userget = DB::table('users')
+                    ->where('email', $request->email)
+                    ->first();
+                $history_email = DB::table('historyemail')
+                    ->insert([
+                        'user_id' => $userget->id
+                    ]);
+                if ($history_email == true) {
+                    return response()->json([
+                        'success' => "đăng nhập thành công"
+                    ]);
+                } else {
+                    echo "thất bại";
                 }
+            } else {
+                return response()->json(['GỬi mail thất bại']);
             }
-            // return view('users.register');
-
-        });
+            // });
+        }
     }
 }

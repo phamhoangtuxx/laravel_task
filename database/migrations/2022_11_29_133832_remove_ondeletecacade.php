@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHistoryEmailTable extends Migration
+class RemoveOndeletecacade extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateHistoryEmailTable extends Migration
      */
     public function up()
     {
-        Schema::create('HistoryEmail', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
-            //
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamp('sendmailAt');
+        Schema::table('HistoryEmail', function (Blueprint $table) {
+            $table->dropForeign('historyemail_user_id_foreign');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -29,7 +27,8 @@ class CreateHistoryEmailTable extends Migration
     public function down()
     {
         Schema::table('HistoryEmail', function (Blueprint $table) {
-            //
+            $table->dropForeign('historyemail_user_id_foreign');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 }

@@ -9,4 +9,7 @@ class HistoryEmail extends Model
 {
     public $timestamps = false;
     use HasFactory;
+
+
+    protected $fillable = [];
 }
