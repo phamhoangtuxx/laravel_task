@@ -155,24 +155,22 @@ class UserController extends Controller
                 $mailLable = new SendRecoveryCode($userORM);
                 Mail::to($email)->send($mailLable);
 
-                //Update VerifiedCode
-                $length = 7;
-                $pool = '0123456789349487324987384973895735632984601937497383748374385610';
-                $VerifiedCode = substr(str_shuffle(str_repeat($pool, 4)), 0, $length);
+
+                $VerifiedCode = rand(1111, 9999);
                 $update = DB::table('users')
                     ->where('email', $email)
                     ->update([
                         'VerifiedCode' => $VerifiedCode,
                     ]);
 
+                //Get userID
+                $userId =  DB::table('users')
+                    ->where('email', $email)
+                    ->value('id');
 
-                //Insert column table historyEmail
-                $userget = DB::table('users')
-                    ->where('email', $request->email)
-                    ->first();
                 $history_email = DB::table('historyemail')
                     ->insert([
-                        'user_id' => $userget->id
+                        'user_id' => $userId
                     ]);
                 if ($history_email == true) {
                     return response()->json([
