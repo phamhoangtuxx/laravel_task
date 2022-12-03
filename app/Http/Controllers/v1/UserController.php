@@ -12,6 +12,7 @@ use App\Mail\SendRecoveryCode;
 use Illuminate\Support\Facades\Mail;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Stmt\Foreach_;
 
 class UserController extends Controller
 {
@@ -184,5 +185,63 @@ class UserController extends Controller
             }
             // });
         }
+    }
+
+    public function EmailStatic(Request $request)
+    {
+
+
+        $user = DB::table('users')
+            ->join('historyemail as h', 'users.id', 'h.user_id')
+            ->select('id', 'name', 'email', DB::raw('count(h.user_id) as TotalSendMail'))
+            ->groupBy('users.id')
+            ->get();
+
+        return response()->json([
+            'list_user' => $user
+        ]);
+    }
+
+
+    //Lịch sử thời gian gửi mail  từ user-id nào
+    public function historyEmail()
+    {
+        $user = DB::table('users')
+            ->join('historyemail as h', 'users.id', 'h.user_id')
+            ->select('id', 'name', 'email', 'sendmailAt')
+            ->groupBy('users.id')
+            ->get();
+        return response()->json(['HistoryEmail' => $user]);
+    }
+
+    //
+    public function staticSendmail(Request $request, $id)
+    {
+        $user = DB::table('users')
+            ->where('id', $id)
+            ->join('historyemail as h', 'users.id', 'h.user_id')
+            ->select('id', 'name', DB::raw('count(h.sendmailAt) as TotalSendMail'))
+            ->groupBy('users.id')
+            ->get();
+
+        return response()->json(['static_sendmail' => $user]);
+    }
+
+
+    //Delete history
+    public function removeHistory(Request $request, $id)
+    {
+        $user = DB::table('historyemail')->where('user_id', $id)->delete();
+
+        return response()->json(['Xóa thành công' => $user . " " . 'dòng']);
+    }
+    public function totalSendmail()
+    {
+        $user = DB::table('historyemail')->count();
+
+        return response()->json([
+            'system' => 'Laravel_Task',
+            'TotalSendMailInSystem' => $user
+        ]);
     }
 }

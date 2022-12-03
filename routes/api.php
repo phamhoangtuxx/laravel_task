@@ -40,9 +40,12 @@ Route::prefix('v1')->group(function () {
     Route::post('user-register', [UserController::class, 'register']);
     Route::put('user-profile/{id}', [UserController::class, 'update']);
     Route::post('user-ResetPassword', [UserController::class, 'ResetPassword']);
-    // Route::post('login', [LoginController::class, 'store'])->name('login.store');
-    // Route::post('register', [RegisterController::class, 'store']);
-    // Route::put('change-profile/{id}', [ChangeprofileController::class, 'update']);
+    Route::get('user-email-statics', [UserController::class, 'EmailStatic']);
+
+    Route::get('user-history-email', [UserController::class, 'historyEmail']);
+    Route::get('user-static-sendmail/{id}', [UserController::class, 'staticSendmail']);
+    Route::delete('user-remove-history/{user_id}', [UserController::class, 'removeHistory']);
+    Route::get('user-total-sendmail', [UserController::class, 'totalSendmail']);
 });
 
 
