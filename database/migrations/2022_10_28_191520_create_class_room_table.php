@@ -14,7 +14,7 @@ class CreateClassRoomTable extends Migration
     public function up()
     {
         Schema::create('class_room', function (Blueprint $table) {
-            $table->integer('classroomID', 11)->unsigned();
+            $table->unsignedBigInteger('id_classroom')->autoIncrement();
             $table->string('name', 255);
             $table->string('icon', 128)->nullable()->default(null);
             $table->text('description')->nullable()->default(null);

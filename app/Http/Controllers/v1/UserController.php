@@ -12,7 +12,6 @@ use App\Mail\SendRecoveryCode;
 use Illuminate\Support\Facades\Mail;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\Hash;
-use PhpParser\Node\Stmt\Foreach_;
 
 class UserController extends Controller
 {
@@ -187,19 +186,23 @@ class UserController extends Controller
         }
     }
 
-    public function EmailStatic(Request $request)
+    public function emailStatic(Request $request)
     {
-
-
+        //Nếu thống kê ko dữ liệu return về rỗng hoặc không có giá trị 
         $user = DB::table('users')
             ->join('historyemail as h', 'users.id', 'h.user_id')
+
             ->select('id', 'name', 'email', DB::raw('count(h.user_id) as TotalSendMail'))
             ->groupBy('users.id')
             ->get();
 
-        return response()->json([
-            'list_user' => $user
-        ]);
+        if (isset($user) == true && null) {
+            return response()->json([
+                'list_user' => $user
+            ]);
+        } else {
+            return response()->json(['message' => 'Không có dữ liệu trả về']);
+        }
     }
 
 
@@ -214,17 +217,27 @@ class UserController extends Controller
         return response()->json(['HistoryEmail' => $user]);
     }
 
-    //
+    //get list user_sendmail
     public function staticSendmail(Request $request, $id)
     {
-        $user = DB::table('users')
-            ->where('id', $id)
-            ->join('historyemail as h', 'users.id', 'h.user_id')
-            ->select('id', 'name', DB::raw('count(h.sendmailAt) as TotalSendMail'))
-            ->groupBy('users.id')
-            ->get();
+        if (is_numeric($id)) {
+            $isExist = DB::table('users')->where('id', $id)->exists();
 
-        return response()->json(['static_sendmail' => $user]);
+            if (!$isExist) {
+                return response()->json(['errors' => "không có dữ liệu id"]);
+            }
+
+            $user = DB::table('users')
+                ->where('id', $id)
+                ->join('historyemail as h', 'users.id', 'h.user_id')
+                ->select('id', 'name', DB::raw('count(h.sendmailAt) as TotalSendMail'))
+                ->groupBy('users.id')
+                ->first();
+
+            return response()->json(['static_sendmail' => $user]);
+        }
+
+        return response()->json(['error' => 'User-Id must be integer']);
     }
 
 
@@ -243,5 +256,30 @@ class UserController extends Controller
             'system' => 'Laravel_Task',
             'TotalSendMailInSystem' => $user
         ]);
+    }
+
+    public function deleteUser($id)
+    {
+        //check user id co ton tai trong he thong hay khong?
+        $isExist = DB::table('users')
+            ->where('id', $id)
+            ->exists();
+        // dd($isExist);
+        //0 true 1false
+        //id 7 true
+        //1. ko co -> ko ton tai
+
+        if (($isExist)) {
+            DB::table('users')
+                ->where('id', $id)
+                ->update(['is_deleted' => 1]);
+            return response()->json([
+                "message" => "Delete Thành conc"
+            ]);
+        } else {
+            return response()->json([
+                "user_id" => "User-id Không TỒn tại"
+            ]);
+        }
     }
 }
