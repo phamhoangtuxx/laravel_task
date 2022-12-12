@@ -143,14 +143,14 @@ class ClassroomController extends Controller
 
 
 
-    //Create member
+    //InviteMember
     public function InviteMember(Request $request)
     {
 
         $params = $request->all();
         $validator = validator::make($params, [
             'member_id' => ['required', 'integer', 'max:20',],
-            'classroom_id' => ['required', 'integer', 'max:20',],
+            'id_classroom' => ['required', 'integer', 'max:20',],
         ],);
 
         if ($validator->fails()) {
@@ -162,26 +162,27 @@ class ClassroomController extends Controller
 
         if ($classroomId && $MemberID) {
             $isExits = DB::table('classroom_member')
-                ->where('member_id', $MemberID)->exits();
+                ->where('member_id', $MemberID)->exists();
             if ($isExits == false) return "member Không tồn tại";
 
             $InviteMember = DB::table('classroom_member')
-                ->where('member_id', $MemberID)->exits()
                 ->insert([
                     'state' => 0,
                     'AcceptAt' => now()
                 ]);
+
+            return response()->json(['messgae' => 'THêm thành công']);
         }
     }
 
-    //Invite member
+    //confirmMember
     public function confirmMember(Request $request)
     {
 
         $params = $request->all();
         $validator = validator::make($params, [
             'member_id' => ['required', 'integer', 'max:20',],
-            'classroom_id' => ['required', 'integer', 'max:20',],
+            'id_classroom' => ['required', 'integer', 'max:20',],
         ],);
 
         if ($validator->fails()) {
@@ -193,15 +194,15 @@ class ClassroomController extends Controller
 
         if ($classroomId && $MemberID) {
             $isExits = DB::table('classroom_member')
-                ->where('member_id', $MemberID)->exits();
+                ->where('member_id', $MemberID)->exists();
             if ($isExits == false) return "member Không tồn tại";
 
             $InviteMember = DB::table('classroom_member')
-                ->where('member_id', $MemberID)->exits()
                 ->update([
                     'state' => 1,
                     'AcceptAt' => now()
                 ]);
+            return response()->json(['messgae' => "Update thành công"]);
         }
     }
 }
