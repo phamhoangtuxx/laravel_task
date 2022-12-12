@@ -144,50 +144,6 @@ class ClassroomController extends Controller
 
 
     //Create member
-    public function CreateMember(Request $request)
-    {
-        $params = $request->all();
-        $validator = validator::make($params, [
-            'member_id' => ['required', 'integer', 'max:20',],
-            'classroom_id' => ['required', 'integer', 'max:20',],
-        ],);
-
-        $MemberID = $request->get('member_id', '');
-        $Member_ID = DB::table('users')
-            ->where('id', $MemberID)
-            ->value('id');
-
-        $ClassroomMember = $request->get('classroom_id', '');
-        $classroom_member = DB::table('class_room')
-            ->where('id_classroom', $ClassroomMember)
-            ->value('id_classroom');
-        // dd($classroom_member);
-
-        if ($validator->fails()) {
-            $errors =  $validator->errors();
-            return $errors;
-        } else {
-
-            if (($Member_ID == $MemberID) && ($classroom_member == $ClassroomMember)) {
-
-                $AddMember = DB::table('classroom_member')
-                    ->insert([
-                        'member_id' => $Member_ID,
-                        'classroom_id' => $classroom_member
-                    ]);
-
-                return response()->json(
-                    [
-                        'MemberID' => "Bạn đã thêm member thành công",
-                    ]
-                );
-            } else {
-                return response()->json(['Member Không tồn tại']);
-            }
-        }
-    }
-
-    //Invite member
     public function InviteMember(Request $request)
     {
 
@@ -197,35 +153,55 @@ class ClassroomController extends Controller
             'classroom_id' => ['required', 'integer', 'max:20',],
         ],);
 
+        if ($validator->fails()) {
+            $errors =  $validator->errors();
+            return $errors;
+        }
+        $classroomId = $request->get('id_classroom', '');
         $MemberID = $request->get('member_id', '');
-        $Member_ID = DB::table('users')
-            ->where('id', $MemberID)
-            ->value('id');
 
-        $ClassroomMember = $request->get('classroom_id', '');
-        $classroom_member = DB::table('class_room')
-            ->where('id_classroom', $ClassroomMember)
-            ->value('id_classroom');
-        // dd($classroom_member);
+        if ($classroomId && $MemberID) {
+            $isExits = DB::table('classroom_member')
+                ->where('member_id', $MemberID)->exits();
+            if ($isExits == false) return "member Không tồn tại";
+
+            $InviteMember = DB::table('classroom_member')
+                ->where('member_id', $MemberID)->exits()
+                ->insert([
+                    'state' => 0,
+                    'AcceptAt' => now()
+                ]);
+        }
+    }
+
+    //Invite member
+    public function confirmMember(Request $request)
+    {
+
+        $params = $request->all();
+        $validator = validator::make($params, [
+            'member_id' => ['required', 'integer', 'max:20',],
+            'classroom_id' => ['required', 'integer', 'max:20',],
+        ],);
 
         if ($validator->fails()) {
             $errors =  $validator->errors();
             return $errors;
-        } else {
+        }
+        $classroomId = $request->get('id_classroom', '');
+        $MemberID = $request->get('member_id', '');
 
-            if (($Member_ID == $MemberID) && ($classroom_member == $ClassroomMember)) {
-                $InviteMember = DB::table('classroom_member')
-                    ->update([
-                        'state' => '1',
-                    ]);
-                return response()->json(
-                    [
-                        'MemberID' => "Câp nhật trang thái thành công",
-                    ]
-                );
-            } else {
-                return response()->json(['Trạng thái chưa được kích hoạt']);
-            }
+        if ($classroomId && $MemberID) {
+            $isExits = DB::table('classroom_member')
+                ->where('member_id', $MemberID)->exits();
+            if ($isExits == false) return "member Không tồn tại";
+
+            $InviteMember = DB::table('classroom_member')
+                ->where('member_id', $MemberID)->exits()
+                ->update([
+                    'state' => 1,
+                    'AcceptAt' => now()
+                ]);
         }
     }
 }

@@ -34,9 +34,9 @@ Route::prefix('class_room')->group(function () {
     Route::put('classroom-update/{id_classroom}', [ClassroomController::class, 'UpdateClassroom']);
     Route::delete('classroom-delete/{id_classroom}', [ClassroomController::class, 'DeleteClassroom']);
     Route::get('classroom-create-user', [ClassroomController::class, 'CreateUserClassroom']);
-    Route::get('classroom-member', [ClassroomController::class, 'CreateMember']);
+    Route::get('classroom-member', [ClassroomController::class, 'InviteMember']);
 
-    Route::put('classroom-invite-member', [ClassroomController::class, 'InviteMember']);
+    Route::put('classroom-invite-member', [ClassroomController::class, 'confirmMember']); //đ
 });
 
 Route::prefix('v1')->group(function () {
