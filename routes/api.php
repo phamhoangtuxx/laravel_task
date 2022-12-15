@@ -4,7 +4,7 @@ use App\Http\Controllers\ChangeprofileController;
 use App\Models\ClassRooms;
 use Illuminate\Http\Request;
 use App\Http\Controllers\class_room\ClassroomController;
-
+use App\Http\Controllers\CurlController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SuccessController;
@@ -52,6 +52,9 @@ Route::prefix('v1')->group(function () {
     Route::get('user-total-sendmail', [UserController::class, 'totalSendmail']);
     Route::get('user-delete-user/{id}', [UserController::class, 'deleteUser']);
 });
+
+
+Route::get('curl-subjects', [CurlController::class, 'getSubjects']);
 
 
     // Route::post('login', [LoginController::class, 'store'])->name('login.store');
